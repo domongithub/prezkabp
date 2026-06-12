@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bitcoin vs. zlato | Obhajoba bakalářské práce</title>
+  <style>
+    :root {
+      --navy: #071425;
+      --navy-2: #0d2038;
+      --navy-3: #132b46;
+      --ink: #132033;
+      --muted: #64748b;
+      --line: #d9e0ea;
+      --paper: #f7f8fb;
+      --white: #ffffff;
+      --gold: #c99a2e;
+      --gold-soft: #f2dfb0;
+      --blue: #2f6f9f;
+      --red: #b8554f;
+      --shadow: 0 24px 80px rgba(3, 10, 21, .28);
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at 18% 16%, rgba(201, 154, 46, .16), transparent 30%),
+        linear-gradient(135deg, #05101f 0%, var(--navy) 42%, #0a1b30 100%);
+      color: var(--ink);
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .deck {
+      position: relative;
+      width: min(100vw, 177.78vh);
+      height: min(100vh, 56.25vw);
+      background: var(--paper);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: clamp(16px, 2vw, 30px);
+      padding: clamp(30px, 4.4vw, 68px);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(5%) scale(.985);
+      transition: opacity .55s var(--ease), transform .55s var(--ease);
+      background:
+        linear-gradient(90deg, rgba(7, 20, 37, .055) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(7, 20, 37, .045) 1px, transparent 1px),
+        var(--paper);
+      background-size: 54px 54px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(0) scale(1);
+      z-index: 2;
+    }
+
+    .slide.exit-left {
+      transform: translateX(-4%) scale(.985);
+    }
+
+    .slide.dark {
+      color: var(--white);
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, .055) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255, 255, 255, .045) 1px, transparent 1px),
+        radial-gradient(circle at 82% 24%, rgba(201, 154, 46, .18), transparent 29%),
+        linear-gradient(135deg, #06111f 0%, #0a1d33 48%, #102a45 100%);
+      background-size: 54px 54px, 54px 54px, auto, auto;
+    }
+
+    .kicker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--gold);
+      font-size: clamp(12px, 1vw, 15px);
+      font-weight: 750;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .kicker::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: currentColor;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(38px, 5.85vw, 84px);
+      line-height: .98;
+      letter-spacing: 0;
+      font-weight: 820;
+    }
+
+    h2 {
+      max-width: 13ch;
+      font-size: clamp(34px, 4.4vw, 62px);
+      line-height: 1.02;
+      letter-spacing: 0;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .dark h2,
+    .dark h1 {
+      color: var(--white);
+    }
+
+    .lead {
+      max-width: 760px;
+      font-size: clamp(19px, 2vw, 30px);
+      line-height: 1.25;
+      color: #d8e2ef;
+    }
+
+    .body {
+      align-self: center;
+      display: grid;
+      gap: clamp(18px, 2.1vw, 34px);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.03fr .97fr;
+      gap: clamp(28px, 4vw, 62px);
+      align-items: center;
+    }
+
+    .content-list {
+      display: grid;
+      gap: 16px;
+      max-width: 820px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      font-size: clamp(20px, 2.05vw, 31px);
+      line-height: 1.26;
+      color: #253248;
+    }
+
+    .dark .content-list {
+      color: #e9eef7;
+    }
+
+    .content-list li {
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .content-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .55em;
+      width: 9px;
+      height: 9px;
+      border: 2px solid var(--gold);
+      transform: rotate(45deg);
+    }
+
+    .emphasis {
+      color: var(--gold);
+      font-weight: 780;
+    }
+
+    .small {
+      font-size: clamp(14px, 1.15vw, 18px);
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .dark .small {
+      color: #b9c7da;
+    }
+
+    .meta {
+      display: grid;
+      gap: 8px;
+      font-size: clamp(15px, 1.25vw, 20px);
+      color: #cbd7e8;
+    }
+
+    .meta strong {
+      color: var(--white);
+      font-weight: 760;
+    }
+
+    .visual-panel {
+      position: relative;
+      min-height: min(430px, 60vh);
+      border: 1px solid rgba(255, 255, 255, .16);
+      background: rgba(255, 255, 255, .045);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .treasury-visual {
+      height: 100%;
+      min-height: min(430px, 60vh);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .asset-orbit {
+      position: relative;
+      width: min(36vw, 440px, 54vh);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, .19);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .asset-orbit::before,
+    .asset-orbit::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(201, 154, 46, .36);
+    }
+
+    .asset-orbit::before {
+      inset: 18%;
+    }
+
+    .asset-orbit::after {
+      inset: 34%;
+      border-color: rgba(255, 255, 255, .18);
+    }
+
+    .coin,
+    .bar,
+    .vault {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, .24);
+    }
+
+    .coin {
+      top: 10%;
+      right: 8%;
+      width: 92px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #e5b34c, #8a641b);
+      color: #fff8e7;
+      font-size: 48px;
+      font-weight: 800;
+    }
+
+    .bar {
+      left: 2%;
+      bottom: 18%;
+      width: 150px;
+      height: 70px;
+      transform: skewX(-13deg);
+      background: linear-gradient(145deg, #f0c86a, #a6751e);
+    }
+
+    .bar::after {
+      content: "Au";
+      transform: skewX(13deg);
+      color: #fff7dd;
+      font-size: 30px;
+      font-weight: 780;
+    }
+
+    .vault {
+      width: 138px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #edf3f9, #9fb0c2);
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+    }
+
+    .axis-card,
+    .stat-card,
+    .approach-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .84);
+      box-shadow: 0 16px 40px rgba(7, 20, 37, .08);
+    }
+
+    .axis-card {
+      padding: clamp(22px, 2.3vw, 34px);
+      display: grid;
+      gap: 22px;
+    }
+
+    .triangle {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-items: end;
+    }
+
+    .triangle .node {
+      min-height: 128px;
+      padding: 18px;
+      display: grid;
+      align-content: end;
+      border-left: 3px solid var(--gold);
+      background: #fdfefe;
+    }
+
+    .node strong {
+      display: block;
+      font-size: clamp(22px, 2.2vw, 34px);
+      color: var(--navy);
+      margin-bottom: 7px;
+    }
+
+    .node span {
+      color: var(--muted);
+      font-size: clamp(14px, 1.05vw, 17px);
+      line-height: 1.35;
+    }
+
+    .questions {
+      display: grid;
+      gap: 12px;
+      counter-reset: question;
+      max-width: 900px;
+    }
+
+    .question {
+      counter-increment: question;
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 19px 0;
+      border-top: 1px solid rgba(255, 255, 255, .2);
+      color: #edf3fb;
+      font-size: clamp(18px, 1.75vw, 27px);
+      line-height: 1.22;
+    }
+
+    .question::before {
+      content: "0" counter(question);
+      color: var(--gold);
+      font-weight: 800;
+      font-size: clamp(17px, 1.45vw, 23px);
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .method-item {
+      min-height: 136px;
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      display: grid;
+      align-content: space-between;
+    }
+
+    .method-item b {
+      color: var(--gold);
+      font-size: clamp(26px, 3vw, 42px);
+      line-height: 1;
+    }
+
+    .method-item span {
+      color: var(--navy);
+      font-weight: 720;
+      font-size: clamp(16px, 1.25vw, 21px);
+      line-height: 1.18;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .stat-card {
+      padding: clamp(22px, 2.5vw, 36px);
+      display: grid;
+      gap: 20px;
+    }
+
+    .stat-card h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--navy);
+      font-size: clamp(28px, 2.8vw, 44px);
+      line-height: 1;
+    }
+
+    .badge {
+      padding: 8px 11px;
+      border: 1px solid rgba(201, 154, 46, .42);
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      padding-top: 12px;
+      border-top: 2px solid #e4e9f1;
+    }
+
+    .stat .value {
+      color: var(--navy);
+      font-size: clamp(20px, 2.05vw, 34px);
+      line-height: 1;
+      font-weight: 830;
+      white-space: nowrap;
+    }
+
+    .stat .label {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: clamp(11px, .95vw, 14px);
+      line-height: 1.25;
+    }
+
+    .chart-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .chart {
+      min-height: 370px;
+      padding: 24px;
+      background: var(--white);
+      border: 1px solid var(--line);
+    }
+
+    .chart-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+      color: var(--navy);
+      font-weight: 780;
+      font-size: clamp(17px, 1.35vw, 22px);
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .legend {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+      align-items: center;
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      margin-right: 6px;
+      vertical-align: -1px;
+      background: var(--gold);
+    }
+
+    .legend .btc i {
+      background: var(--blue);
+    }
+
+    .insight {
+      padding: 24px;
+      background: var(--navy);
+      color: #eaf0f8;
+      display: grid;
+      gap: 18px;
+      align-content: center;
+    }
+
+    .insight b {
+      color: var(--gold);
+      font-size: clamp(25px, 2.45vw, 38px);
+      line-height: 1.05;
+    }
+
+    .insight p {
+      font-size: clamp(17px, 1.35vw, 22px);
+      line-height: 1.35;
+    }
+
+    .approach-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .approach-card {
+      min-height: 280px;
+      padding: clamp(22px, 2.3vw, 34px);
+      display: grid;
+      align-content: space-between;
+      gap: 26px;
+    }
+
+    .approach-card .number {
+      color: var(--gold);
+      font-size: clamp(38px, 4vw, 58px);
+      font-weight: 820;
+      line-height: .9;
+    }
+
+    .approach-card h3 {
+      color: var(--navy);
+      font-size: clamp(23px, 2.15vw, 34px);
+      line-height: 1.08;
+    }
+
+    .approach-card p {
+      color: var(--muted);
+      font-size: clamp(16px, 1.25vw, 20px);
+      line-height: 1.35;
+    }
+
+    .quote {
+      max-width: 1040px;
+      padding-top: 28px;
+      border-top: 2px solid rgba(201, 154, 46, .72);
+      color: #edf4ff;
+      font-size: clamp(28px, 3.35vw, 50px);
+      line-height: 1.12;
+      font-weight: 740;
+    }
+
+    .thanks {
+      align-self: center;
+      display: grid;
+      gap: 26px;
+      max-width: 980px;
+    }
+
+    .thanks h2 {
+      max-width: none;
+      font-size: clamp(54px, 7vw, 104px);
+      line-height: .96;
+    }
+
+    .thanks .lead {
+      max-width: 760px;
+      color: #dce6f3;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      color: rgba(19, 32, 51, .58);
+      font-size: clamp(12px, 1vw, 15px);
+    }
+
+    .dark .footer {
+      color: rgba(237, 243, 251, .62);
+    }
+
+    .slide-no {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .controls {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 20;
+      display: flex;
+      gap: 8px;
+      opacity: .86;
+    }
+
+    .controls button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, .22);
+      background: rgba(7, 20, 37, .72);
+      color: var(--white);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: background .2s ease, transform .2s ease;
+    }
+
+    .controls button:hover {
+      background: rgba(19, 43, 70, .94);
+      transform: translateY(-1px);
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 30;
+      height: 4px;
+      background: rgba(255, 255, 255, .16);
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 12.5%;
+      background: var(--gold);
+      transition: width .35s var(--ease);
+    }
+
+    @media (max-width: 900px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      body {
+        min-height: 100%;
+        display: block;
+        background: var(--paper);
+      }
+
+      .deck {
+        width: 100vw;
+        height: 100svh;
+        min-height: 620px;
+        box-shadow: none;
+      }
+
+      .slide {
+        padding: 28px;
+        gap: 18px;
+      }
+
+      .two-col,
+      .chart-wrap,
+      .metric-grid,
+      .approach-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .method-grid,
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .visual-panel,
+      .treasury-visual {
+        min-height: 250px;
+      }
+
+      .coin {
+        width: 70px;
+        font-size: 36px;
+      }
+
+      .bar {
+        width: 110px;
+        height: 54px;
+      }
+
+      .vault {
+        width: 104px;
+      }
+
+      .content-list {
+        gap: 12px;
+      }
+
+      .controls {
+        top: 10px;
+        right: 10px;
+      }
+
+    }
+
+    @media print {
+      @page {
+        size: 16in 9in;
+        margin: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck {
+        width: 16in;
+        height: auto;
+        overflow: visible;
+        box-shadow: none;
+      }
+
+      .slide {
+        position: relative;
+        width: 16in;
+        height: 9in;
+        page-break-after: always;
+        break-after: page;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+      }
+
+      .controls,
+      .progress,
+      .hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <main class="deck" id="deck" aria-live="polite">
+    <section class="slide dark active" data-title="Titulní slide">
+      <div class="kicker">Obhajoba bakalářské práce</div>
+      <div class="body two-col">
+        <div>
+          <h1>Bitcoin vs. zlato jako uchovatel hodnoty</h1>
+          <p class="lead" style="margin-top: 28px;">V kontextu podnikového finančního řízení</p>
+        </div>
+        <div class="visual-panel treasury-visual" aria-label="Decentní vizuál firemních rezerv, zlata a Bitcoinu">
+          <div class="asset-orbit">
+            <div class="coin">₿</div>
+            <div class="bar"></div>
+            <div class="vault">Treasury</div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="meta">
+          <div><strong>Dominik Oktábec</strong></div>
+          <div>Vysoká škola ekonomická v Praze, Fakulta podnikohospodářská</div>
+          <div>Vedoucí práce: Ing. Jitka Špeciánová, Ph.D.</div>
+        </div>
+        <div class="slide-no">01 / 09</div>
+      </footer>
+    </section>
+
+    <section class="slide" data-title="Kontext a problém">
+      <div class="kicker">Kontext a problém</div>
+      <div class="body two-col">
+        <div>
+          <h2>Firemní rezervy nejsou jen hotovost na účtu</h2>
+          <p class="small" style="margin-top: 22px;">Podnikové finance pracují s rezervami jako s nástrojem likvidity, flexibility a odolnosti vůči nejistotě.</p>
+        </div>
+        <div class="axis-card">
+          <ul class="content-list">
+            <li>Podniky drží rezervy kvůli <span class="emphasis">likviditě</span> a finanční flexibilitě.</li>
+            <li>Inflace snižuje reálnou hodnotu neinvestované hotovosti.</li>
+            <li>Klíčové dilema: <span class="emphasis">likvidita vs. výnos vs. riziko</span>.</li>
+          </ul>
+          <div class="triangle" aria-label="Likvidita, výnos a riziko">
+            <div class="node"><strong>Likvidita</strong><span>Dostupnost prostředků pro provoz a investice</span></div>
+            <div class="node"><strong>Výnos</strong><span>Ochrana kupní síly a zhodnocení rezerv</span></div>
+            <div class="node"><strong>Riziko</strong><span>Volatilita, poklesy a účetní dopady</span></div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><span>Bitcoin vs. zlato | VŠE FPH</span><span class="slide-no">02 / 09</span></footer>
+    </section>
+
+    <section class="slide dark" data-title="Cíl a otázky">
+      <div class="kicker">Cíl práce a výzkumné otázky</div>
+      <div class="body two-col">
+        <div>
+          <h2>Porovnat roli, ne vyhlásit vítěze</h2>
+          <p class="lead" style="margin-top: 24px;">Cílem je posoudit, zda a za jakých podmínek mohou Bitcoin a zlato chránit firemní peněžní rezervy.</p>
+        </div>
+        <div class="questions">
+          <div class="question">Jaké jsou rozdíly mezi Bitcoinem a zlatem z hlediska výnosnosti a rizikovosti?</div>
+          <div class="question">Za jakých podmínek může být Bitcoin vhodným doplňkem rezerv?</div>
+          <div class="question">Kdy je zlato vhodnější uchovatel hodnoty než Bitcoin?</div>
+        </div>
+      </div>
+      <footer class="footer"><span>Akademický rámec: podnikové finanční řízení</span><span class="slide-no">03 / 09</span></footer>
+    </section>
+
+    <section class="slide" data-title="Metodologie">
+      <div class="kicker">Metodologie</div>
+      <div class="body">
+        <div class="two-col">
+          <div>
+            <h2>Měsíční data v období 2016–2024</h2>
+            <p class="small" style="margin-top: 22px;">Analýza sleduje Bitcoin a zlato přes výnos, riziko, poklesy a vztah k inflaci. Nehledá univerzálně lepší aktivum, ale rozdílnou roli v rezervách.</p>
+          </div>
+          <div class="method-grid">
+            <div class="method-item"><b>2016</b><span>začátek období</span></div>
+            <div class="method-item"><b>2024</b><span>konec období</span></div>
+            <div class="method-item"><b>2</b><span>porovnávaná aktiva</span></div>
+            <div class="method-item"><b>6</b><span>hodnocených ukazatelů</span></div>
+          </div>
+        </div>
+        <ul class="content-list" style="grid-template-columns: repeat(3, 1fr); display: grid; max-width: none; font-size: clamp(17px, 1.45vw, 23px);">
+          <li>Výnosnost, volatilita a Sharpe ratio</li>
+          <li>Maximální drawdown a vzájemná korelace</li>
+          <li>Korelace s inflací a interpretace pro rezervy</li>
+        </ul>
+      </div>
+      <footer class="footer"><span>Metodický důraz: role aktiv v rezervách</span><span class="slide-no">04 / 09</span></footer>
+    </section>
+
+    <section class="slide" data-title="Klíčové výsledky">
+      <div class="kicker">Klíčové výsledky</div>
+      <div class="body">
+        <h2 style="max-width: 1100px;">Vyšší rizikovost Bitcoinu je kompenzována vyšším výnosovým potenciálem.</h2>
+        <div class="metric-grid">
+          <article class="stat-card">
+            <h3>Bitcoin <span class="badge">vyšší dynamika</span></h3>
+            <div class="stats">
+              <div class="stat"><div class="value">86,00 %</div><div class="label">průměrná roční výnosnost</div></div>
+              <div class="stat"><div class="value">70,75 %</div><div class="label">roční volatilita</div></div>
+              <div class="stat"><div class="value">0,85</div><div class="label">Sharpe ratio</div></div>
+              <div class="stat"><div class="value">-75,18 %</div><div class="label">maximální drawdown</div></div>
+              <div class="stat"><div class="value">-0,11</div><div class="label">korelace s inflací</div></div>
+            </div>
+          </article>
+          <article class="stat-card">
+            <h3>Zlato <span class="badge">vyšší stabilita</span></h3>
+            <div class="stats">
+              <div class="stat"><div class="value">10,04 %</div><div class="label">průměrná roční výnosnost</div></div>
+              <div class="stat"><div class="value">13,51 %</div><div class="label">roční volatilita</div></div>
+              <div class="stat"><div class="value">0,57</div><div class="label">Sharpe ratio</div></div>
+              <div class="stat"><div class="value">-17,30 %</div><div class="label">maximální drawdown</div></div>
+              <div class="stat"><div class="value">-0,07</div><div class="label">korelace s inflací</div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+      <footer class="footer"><span>Období analýzy: 2016–2024, měsíční data</span><span class="slide-no">05 / 09</span></footer>
+    </section>
+
+    <section class="slide" data-title="Interpretace výsledků">
+      <div class="kicker">Interpretace výsledků</div>
+      <div class="body chart-wrap">
+        <div class="chart">
+          <div class="chart-title">
+            <span>Výnos vs. volatilita</span>
+            <span class="legend"><span class="btc"><i></i>Bitcoin</span><span><i></i>Zlato</span></span>
+          </div>
+          <svg viewBox="0 0 760 420" role="img" aria-label="Bodový graf výnosu a volatility Bitcoinu a zlata">
+            <line x1="82" y1="338" x2="704" y2="338" stroke="#cad3df" stroke-width="2"/>
+            <line x1="82" y1="338" x2="82" y2="42" stroke="#cad3df" stroke-width="2"/>
+            <text x="380" y="392" fill="#64748b" font-size="18" text-anchor="middle">Roční volatilita</text>
+            <text x="22" y="190" fill="#64748b" font-size="18" transform="rotate(-90 22 190)" text-anchor="middle">Průměrná roční výnosnost</text>
+            <g stroke="#e4e9f1">
+              <line x1="82" y1="278" x2="704" y2="278"/>
+              <line x1="82" y1="218" x2="704" y2="218"/>
+              <line x1="82" y1="158" x2="704" y2="158"/>
+              <line x1="82" y1="98" x2="704" y2="98"/>
+            </g>
+            <circle cx="650" cy="62" r="24" fill="#2f6f9f"/>
+            <text x="650" y="112" fill="#132033" font-size="20" font-weight="800" text-anchor="middle">Bitcoin</text>
+            <text x="650" y="137" fill="#64748b" font-size="16" text-anchor="middle">86,00 % / 70,75 %</text>
+            <circle cx="198" cy="304" r="18" fill="#c99a2e"/>
+            <text x="198" y="255" fill="#132033" font-size="20" font-weight="800" text-anchor="middle">Zlato</text>
+            <text x="198" y="280" fill="#64748b" font-size="16" text-anchor="middle">10,04 % / 13,51 %</text>
+          </svg>
+        </div>
+        <div class="insight">
+          <b>Výsledek není symetrický.</b>
+          <p>Bitcoin přináší vyšší výnos a lepší Sharpe ratio, ale zároveň extrémně vyšší volatilitu a hlubší propady.</p>
+          <p>Zlato má nižší výnos, ale stabilnější průběh a menší ztrátové epizody.</p>
+        </div>
+      </div>
+      <footer class="footer"><span>Krátkodobý vztah k inflaci se neprokázal jako významný</span><span class="slide-no">06 / 09</span></footer>
+    </section>
+
+    <section class="slide" data-title="Dopad na podnikové řízení">
+      <div class="kicker">Dopad na podnikové finanční řízení</div>
+      <div class="body">
+        <h2 style="max-width: 960px;">Rozhodnutí závisí na rizikovém profilu podniku</h2>
+        <div class="approach-grid">
+          <article class="approach-card">
+            <div class="number">01</div>
+            <div>
+              <h3>Konzervativní podnik</h3>
+              <p>Preferuje zlato kvůli stabilitě, nižší volatilitě a menším poklesům hodnoty.</p>
+            </div>
+          </article>
+          <article class="approach-card">
+            <div class="number">02</div>
+            <div>
+              <h3>Dynamický podnik</h3>
+              <p>Může uvažovat o malé alokaci do Bitcoinu v dlouhodobější části rezerv.</p>
+            </div>
+          </article>
+          <article class="approach-card">
+            <div class="number">03</div>
+            <div>
+              <h3>Kombinovaný přístup</h3>
+              <p>Zlato jako stabilizační složka, Bitcoin jako výnosovější doplněk portfolia.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+      <footer class="footer"><span>Nízká korelace aktiv podporuje diverzifikační využití</span><span class="slide-no">07 / 09</span></footer>
+    </section>
+
+    <section class="slide dark" data-title="Závěr">
+      <div class="kicker">Závěr</div>
+      <div class="body two-col">
+        <div>
+          <h2>Bitcoin a zlato nejsou přímé náhrady</h2>
+          <ul class="content-list" style="margin-top: 28px; font-size: clamp(18px, 1.65vw, 25px);">
+            <li>Bitcoin je vhodný pouze jako menší doplněk dlouhodobější části rezerv.</li>
+            <li>Zlato je vhodnější pro podniky preferující stabilitu a nižší riziko.</li>
+            <li>Kombinace obou aktiv může dávat smysl z hlediska diverzifikace.</li>
+          </ul>
+        </div>
+        <div class="quote">„Volba aktiva závisí především na rizikovém profilu podniku, časovém horizontu a požadavku na likviditu.“</div>
+      </div>
+      <footer class="footer">
+        <span>Hlavní závěr práce</span>
+        <div class="slide-no">08 / 09</div>
+      </footer>
+    </section>
+
+    <section class="slide dark" data-title="Děkuji za pozornost">
+      <div class="kicker">Diskuse</div>
+      <div class="thanks">
+        <h2>Děkuji za pozornost</h2>
+        <p class="lead">Bitcoin vs. zlato jako uchovatel hodnoty v kontextu podnikového finančního řízení</p>
+      </div>
+      <footer class="footer">
+        <div class="meta"><div><strong>Dominik Oktábec</strong></div><div>Vysoká škola ekonomická v Praze, Fakulta podnikohospodářská</div><div>Vedoucí práce: Ing. Jitka Špeciánová, Ph.D.</div></div>
+        <div class="slide-no">09 / 09</div>
+      </footer>
+    </section>
+  </main>
+
+  <nav class="controls" aria-label="Ovládání prezentace">
+    <button type="button" id="prevBtn" aria-label="Předchozí slide">‹</button>
+    <button type="button" id="nextBtn" aria-label="Další slide">›</button>
+    <button type="button" id="fullBtn" aria-label="Fullscreen">⛶</button>
+  </nav>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progressBar = document.getElementById("progressBar");
+    const deck = document.getElementById("deck");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const fullBtn = document.getElementById("fullBtn");
+    let current = 0;
+
+    function updateSlide(next) {
+      const bounded = Math.max(0, Math.min(slides.length - 1, next));
+      if (bounded === current) return;
+      slides[current].classList.toggle("exit-left", bounded > current);
+      slides[current].classList.remove("active");
+      current = bounded;
+      slides[current].classList.remove("exit-left");
+      slides[current].classList.add("active");
+      document.title = `${slides[current].dataset.title} | Bitcoin vs. zlato`;
+      progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+    }
+
+    function go(delta) {
+      updateSlide(current + delta);
+    }
+
+    prevBtn.addEventListener("click", () => go(-1));
+    nextBtn.addEventListener("click", () => go(1));
+    deck.addEventListener("click", (event) => {
+      if (event.target.closest("button")) return;
+      go(1);
+    });
+
+    fullBtn.addEventListener("click", async () => {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      const key = event.key.toLowerCase();
+      if (["arrowright", "pagedown", " "].includes(key)) {
+        event.preventDefault();
+        go(1);
+      }
+      if (["arrowleft", "pageup", "backspace"].includes(key)) {
+        event.preventDefault();
+        go(-1);
+      }
+      if (key === "home") updateSlide(0);
+      if (key === "end") updateSlide(slides.length - 1);
+      if (key === "f") fullBtn.click();
+      if (key === "p") window.print();
+    });
+
+    progressBar.style.width = `${(1 / slides.length) * 100}%`;
+  </script>
+</body>
+</html>
